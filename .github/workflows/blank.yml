@@ -18,8 +18,10 @@ jobs:
           git config --global user.email "tagizade.orxan@gmail.com"
 
       - name: Make changes and push
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           echo "Auto commit on $(date)" >> activity_log.txt
           git add activity_log.txt
           git commit -m "Automated commit: $(date)"
-          git push origin main
+          git push https://tagizadeorxan:${GH_PAT}@github.com/tagizadeorxan/workflow.git main
