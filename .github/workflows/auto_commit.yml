@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GH_PAT }}  # Use PAT for authentication
+          token: ${{ secrets.GH_PAT }}
 
       - name: Setup Git
         run: |
@@ -20,14 +20,21 @@ jobs:
           git config --global user.email "tagizade.orxan@gmail.com"
 
       - name: Pull latest changes
-        run: |
-          git pull origin main --rebase
+        run: git pull origin main --rebase
 
-      - name: Make changes and push
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
+      - name: Make 10 Random Commits Throughout the Day
         run: |
-          echo "Auto commit on $(date)" >> activity_log.txt
-          git add activity_log.txt
-          git commit -m "Automated commit: $(date)"
-          git push https://tagizadeorxan:${GH_PAT}@github.com/tagizadeorxan/workflow.git main
+          for i in {1..10}; do
+            # Generate a random sleep time between 1 minute and 2 hours (60 to 7200 seconds)
+            SLEEP_TIME=$((RANDOM % 7200 + 60))
+            echo "Sleeping for $SLEEP_TIME seconds before next commit..."
+            sleep $SLEEP_TIME
+
+            # Make a commit with the current timestamp
+            echo "Random auto commit on $(date)" >> activity_log.txt
+            git add activity_log.txt
+            git commit -m "Automated commit #$i on $(date)"
+
+            # Push the commit
+            git push https://tagizadeorxan:${{ secrets.GH_PAT }}@github.com/tagizadeorxan/workflow.git main
+          done
